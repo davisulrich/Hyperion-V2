@@ -151,10 +151,7 @@ export default class BulletController {
     if (this.timeTillNextBullet > 0) {
       this.timeTillNextBullet--;
     }
-    this.upgradeShooter(ctx);
-  }
 
-  upgradeShooter(ctx) {
     if (
       this.bulletType === "player" &&
       this.isChallenging &&
@@ -162,21 +159,25 @@ export default class BulletController {
       !this.hasFired &&
       !this.isDoubleShooter
     ) {
-      if (this.bullets.length > 0) {
-        this.hasFired = true;
-      } else if (this.timeTillShooterUpgrade > 0) {
-        ctx.fillStyle = "#9df716";
-        ctx.font = "bold 20px Courier New";
-        ctx.fillText(
-          `Time till upgrade: ${this.timeTillShooterUpgrade}`,
-          320,
-          30
-        );
-        this.timeTillShooterUpgrade--;
-      } else if (this.timeTillShooterUpgrade === 0) {
-        this.doubleShooterAudio.play();
-        this.isDoubleShooter = true;
-      }
+      this.upgradeShooter(ctx);
+    }
+  }
+
+  upgradeShooter(ctx) {
+    if (this.bullets.length > 0) {
+      this.hasFired = true;
+    } else if (this.timeTillShooterUpgrade > 0) {
+      ctx.fillStyle = "#9df716";
+      ctx.font = "bold 20px Courier New";
+      ctx.fillText(
+        `Time till upgrade: ${this.timeTillShooterUpgrade}`,
+        320,
+        30
+      );
+      this.timeTillShooterUpgrade--;
+    } else if (this.timeTillShooterUpgrade === 0) {
+      this.doubleShooterAudio.play();
+      this.isDoubleShooter = true;
     }
   }
 }

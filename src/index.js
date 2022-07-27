@@ -1,19 +1,22 @@
 // Youtube: https://www.youtube.com/watch?v=qCBiKJbLcFI
 
 // To do:
-// - make a noise for getting double shooter
-// - show an image for getting ||
-// - why is it that when you restart the game the timer doesn't show up?
-// - create level 4 - 10 signs for beginning of level
+// - rosalia longer intro
+// - if restart, pause all songs
+// - when you choose challenge level then go back to home screen, erase the isChallenging = true
+// - make the levels more gradual - alternate shoot rate and velocity
 // - indicate that enemy hasn't died even tho you shot it
-// - need a way to pass double shooter variable to new levels
 // - add a ship for number 4 and 8
 // - add to instructions - press a random number to use a mystery ship
-// - implement challenging level:
-//    - instructions: if you think you're hot sh%#, press h for a challenge version
-//    - have to earn double shooting
-//    - add 4 more levels
-//    - new enemy capabilities:
+// - instructions: if you think you're hot sh%#, press h for a challenge version
+
+// Done:
+// - make a noise for getting double shooter
+// - need a way to pass double shooter variable to new levels
+// - create level 4 - 10 signs for beginning of level
+// - have to earn double shooting
+// - add 4 more levels
+// - new enemy capabilities:
 //        - have to shoot twice to kill
 //        - shoot more bullets
 
@@ -32,9 +35,9 @@ const GAME_STATE = {
   INSTRUCTIONS: 2
 };
 let gameState = GAME_STATE.STARTSCREEN;
-let current_level = 1;
+let current_level = 7;
 let shipNum = 1;
-let isDoubleShooter = false;
+let isDoubleShooter = true;
 let isChallenging = false;
 
 let isGameOver = false;
@@ -83,12 +86,6 @@ const vocalFunction = new Audio("src/audio/VocalFunction.mp3");
 vocalFunction.volume = 0.45;
 const inDaClub = new Audio("src/audio/InDaClub.mp3");
 inDaClub.volume = 0.45;
-const runIt = new Audio("src/audio/runIt.mp3");
-runIt.volume = 0.45;
-const byeByeBye = new Audio("src/audio/byeByeBye.mp3");
-byeByeBye.volume = 0.45;
-const pony = new Audio("src/audio/pony.mp3");
-pony.volume = 0.45;
 const oldTownRoad = new Audio("src/audio/oldTownRoad.mp3");
 oldTownRoad.volume = 0.45;
 const donlimma = new Audio("src/audio/Donlimma.mp3");
@@ -101,6 +98,14 @@ const zeze = new Audio("src/audio/Zeze.mp3");
 zeze.volume = 0.45;
 const loveScars = new Audio("src/audio/LoveScars.mp3");
 loveScars.volume = 0.45;
+const rosalia = new Audio("src/audio/TKN.mp3");
+rosalia.volume = 0.45;
+const spaceCadet = new Audio("src/audio/SpaceCadet.mp3");
+spaceCadet.volume = 0.45;
+const aLot = new Audio("src/audio/ALot.mp3");
+aLot.volume = 0.45;
+const dior = new Audio("src/audio/Dior.mp3");
+dior.volume = 0.45;
 
 // timer for how long until to show the next rage photo
 let rageNum = 1;
@@ -111,16 +116,26 @@ let rage_photo = new Image();
 rage_photo.src = `/src/images/rage_${rageNum}.png`;
 
 let levelUpTextTimer = 40;
-const level1Image = new Image("/src/images/level_1.png");
-const level2Image = new Image("/src/images/level_2.png");
-const level3Image = new Image("/src/images/level_3.png");
-const level4Image = new Image("/src/images/level_4.png");
-const level5Image = new Image("/src/images/level_5.png");
-const level6Image = new Image("/src/images/level_6.png");
-const level7Image = new Image("/src/images/level_7.png");
-const level8Image = new Image("/src/images/level_8.png");
-const level9Image = new Image("/src/images/level_9.png");
-const level10Image = new Image("/src/images/level_10.png");
+const level1Image = new Image();
+level1Image.src = "/src/images/level_1.png";
+const level2Image = new Image();
+level2Image.src = "/src/images/level_2.png";
+const level3Image = new Image();
+level3Image.src = "/src/images/level_3.png";
+const level4Image = new Image();
+level4Image.src = "/src/images/level_4.png";
+const level5Image = new Image();
+level5Image.src = "/src/images/level_5.png";
+const level6Image = new Image();
+level6Image.src = "/src/images/level_6.png";
+const level7Image = new Image();
+level7Image.src = "/src/images/level_7.png";
+const level8Image = new Image();
+level8Image.src = "/src/images/level_8.png";
+const level9Image = new Image();
+level9Image.src = "/src/images/level_9.png";
+const level10Image = new Image();
+level10Image.src = "/src/images/level_10.png";
 
 // #endregion
 
@@ -139,6 +154,11 @@ let startGame = (event) => {
       rage.pause();
       oldTownRoad.pause();
       dropTop.pause();
+      zeze.pause();
+      loveScars.pause();
+      rosalia.pause();
+      spaceCadet.pause();
+      dior.pause();
       gameState = GAME_STATE.STARTSCREEN;
     } else if (event.code === "Space") {
       if (!didWin) {
@@ -208,8 +228,10 @@ let startGame = (event) => {
       rage.play();
     } else {
       inDaClub.pause();
-      gasolina.currentTime = 0;
-      gasolina.play();
+      // gasolina.currentTime = 0;
+      // gasolina.play();
+      rosalia.currentTime = 0;
+      rosalia.play();
     }
   }
 };
@@ -330,7 +352,7 @@ function resetAllVariables() {
   isGameOver = false;
   didWin = false;
   isDoubleShooter = false;
-  isChallenging = false;
+  isChallenging = playerBulletController.isChallenging;
   levelUpTextTimer = 40;
   rageNum = 1;
   nextRagePhotoTimer = 100;
@@ -364,6 +386,13 @@ function resetAllVariables() {
     isChallenging
   );
   player = new Player(canvas, 18, playerBulletController, shipNum);
+
+  dropTop.pause();
+  zeze.pause();
+  loveScars.pause();
+  rosalia.pause();
+  spaceCadet.pause();
+  dior.pause();
 }
 
 function levelUp() {
@@ -403,26 +432,25 @@ function levelUp() {
 function drawLevelUp() {
   if (levelUpTextTimer >= 0) {
     if (current_level === 1) {
-      console.log("draw image!");
-      ctx.drawImage(level1Image, 200, 300, 186, 48);
+      ctx.drawImage(level1Image, 210, 300, 186, 48);
     } else if (current_level === 2) {
-      ctx.drawImage(level2Image, 200, 300, 186, 48);
+      ctx.drawImage(level2Image, 210, 300, 186, 48);
     } else if (current_level === 3) {
-      ctx.drawImage(level3Image, 200, 300, 186, 48);
+      ctx.drawImage(level3Image, 210, 300, 186, 48);
     } else if (current_level === 4) {
-      ctx.drawImage(level4Image, 200, 300, 186, 48);
+      ctx.drawImage(level4Image, 210, 300, 186, 48);
     } else if (current_level === 5) {
-      ctx.drawImage(level5Image, 200, 300, 186, 48);
+      ctx.drawImage(level5Image, 210, 300, 186, 48);
     } else if (current_level === 6) {
-      ctx.drawImage(level6Image, 200, 300, 186, 48);
+      ctx.drawImage(level6Image, 210, 300, 186, 48);
     } else if (current_level === 7) {
-      ctx.drawImage(level7Image, 200, 300, 186, 48);
+      ctx.drawImage(level7Image, 210, 300, 186, 48);
     } else if (current_level === 8) {
-      ctx.drawImage(level8Image, 200, 300, 186, 48);
+      ctx.drawImage(level8Image, 210, 300, 186, 48);
     } else if (current_level === 9) {
-      ctx.drawImage(level9Image, 200, 300, 186, 48);
+      ctx.drawImage(level9Image, 210, 300, 186, 48);
     } else if (current_level === 10) {
-      ctx.drawImage(level10Image, 200, 300, 186, 48);
+      ctx.drawImage(level10Image, 210, 300, 186, 48);
     }
     levelUpTextTimer--;
   }
@@ -480,14 +508,12 @@ function checkGameOver() {
     // #region challenging levels
     else if (current_level === 3 && isChallenging) {
       current_level = 4;
-      gasolina.pause();
       inDaClub.pause();
       dropTop.currentTime = 0;
       dropTop.play();
       levelUp();
     } else if (current_level === 4 && isChallenging) {
       current_level = 5;
-      gasolina.pause();
       dropTop.pause();
       zeze.currentTime = 0;
       zeze.play();
@@ -500,27 +526,28 @@ function checkGameOver() {
       levelUp();
     } else if (current_level === 6 && isChallenging) {
       current_level = 7;
-      // dropTop.pause();
-      // zeze.currentTime = 0;
-      // zeze.play();
+      loveScars.pause();
+      rosalia.currentTime = 0;
+      rosalia.play();
       levelUp();
     } else if (current_level === 7 && isChallenging) {
       current_level = 8;
-      // dropTop.pause();
-      // zeze.currentTime = 0;
-      // zeze.play();
+      gasolina.pause();
+      rosalia.pause();
+      aLot.currentTime = 0;
+      aLot.play();
       levelUp();
     } else if (current_level === 8 && isChallenging) {
       current_level = 9;
-      // dropTop.pause();
-      // zeze.currentTime = 0;
-      // zeze.play();
+      aLot.pause();
+      spaceCadet.currentTime = 0;
+      spaceCadet.play();
       levelUp();
     } else if (current_level === 9 && isChallenging) {
       current_level = 10;
-      // dropTop.pause();
-      // zeze.currentTime = 0;
-      // zeze.play();
+      spaceCadet.pause();
+      dior.currentTime = 0;
+      dior.play();
       levelUp();
     } else if (current_level === 10 && isChallenging) {
       didWin = true;
@@ -537,18 +564,12 @@ function displayGameOver() {
     if (didWin) {
       const textOriginX = 50;
       const textOriginY = 100;
-      let text = "You Saved Hyperion!";
+      let text = "You Won!";
       ctx.fillStyle = "white";
       ctx.font = "45px Courier New";
       ctx.fillText(text, textOriginX, textOriginY);
 
-      ctx.drawImage(
-        hyperionMoonHappy,
-        textOriginX + 20,
-        textOriginY + 90,
-        325,
-        275
-      );
+      ctx.drawImage(hyperionMoon, textOriginX + 20, textOriginY + 90, 325, 275);
       const currShip = new Image();
       currShip.src = `/src/images/pixel_ship_${shipNum}.png`;
       ctx.drawImage(currShip, textOriginX + 390, textOriginY + 325, 53, 53);
@@ -563,13 +584,13 @@ function displayGameOver() {
       ctx.fillStyle = "#9df716";
       ctx.fillRect(textOriginX + 412, textOriginY + 200, 3.75, 15);
 
-      const mittens = new Image();
-      mittens.src = "/src/images/pixel_ship_6.png";
-      ctx.drawImage(mittens, textOriginX + 150, textOriginY + 70, 53, 53);
+      // const mittens = new Image();
+      // mittens.src = "/src/images/pixel_ship_6.png";
+      // ctx.drawImage(mittens, textOriginX + 150, textOriginY + 70, 53, 53);
 
-      ctx.font = "15px Courier New";
-      let text3 = "The secret word is: 'Mittens'";
-      ctx.fillText(text3, textOriginX + 210, textOriginY + 60);
+      // ctx.font = "15px Courier New";
+      // let text3 = "The secret word is: 'Mittens'";
+      // ctx.fillText(text3, textOriginX + 210, textOriginY + 60);
     }
     // you lost :(
     else {

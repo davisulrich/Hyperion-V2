@@ -45,8 +45,15 @@ export default class EnemyController {
     this.enemyDeathSound = new Audio("/src/audio/enemy_death.ogg");
     this.enemyDeathSound.volume = 0.07;
 
-    if (this.level >= 4) {
+    // enemy shoot speed / rate
+    if (this.level >= 4 && this.level < 6) {
+      this.fireBulletTimerDefault = 15;
+    } else if (this.level >= 6 && this.level < 8) {
+      this.fireBulletTimerDefault = 12;
+    } else if (this.level >= 8 && this.level < 10) {
       this.fireBulletTimerDefault = 10;
+    } else if (this.level === 10) {
+      this.fireBulletTimerDefault = 5;
     }
   }
 
@@ -88,7 +95,7 @@ export default class EnemyController {
 
           // enemies that take two shots to die
           // if (
-          //   this.level === 5 &&
+          //   this.level >= 8 &&
           //   enemy.imageNumber === 3 &&
           //   enemy.enemyLives > 0
           // ) {
@@ -135,9 +142,18 @@ export default class EnemyController {
       } else if (this.level === 2) {
         this.defaultXVelocity = 2;
         this.defaultYVelocity = 1.5;
-      } else if (this.level >= 3) {
+      } else if (this.level >= 3 && this.level < 5) {
         this.defaultXVelocity = 2;
         this.defaultYVelocity = 2;
+      } else if (this.level >= 5 && this.level < 7) {
+        this.defaultXVelocity = 2.25;
+        this.defaultYVelocity = 2;
+      } else if (this.level >= 7 && this.level < 10) {
+        this.defaultXVelocity = 2.25;
+        this.defaultYVelocity = 2.25;
+      } else if (this.level === 10) {
+        this.defaultXVelocity = 2.25;
+        this.defaultYVelocity = 2.25;
       }
     }
 
