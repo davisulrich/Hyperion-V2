@@ -1,7 +1,11 @@
 // Youtube: https://www.youtube.com/watch?v=qCBiKJbLcFI
 
 // To do:
-// - rosalia longer intro
+// - level 8 looks like a 3
+// - leaderboard LEADERBOARD -Liam
+// - make it more about dodging bullts less about the speed of enemies?
+// - 3 lives for challenging level - pick up at beginning of level u left off on
+// - multiple ships for challenging level
 // - if restart, pause all songs
 // - when you choose challenge level then go back to home screen, erase the isChallenging = true
 // - make the levels more gradual - alternate shoot rate and velocity
@@ -32,12 +36,15 @@ const ctx = canvas.getContext("2d");
 const GAME_STATE = {
   STARTSCREEN: 0,
   RUNNING: 1,
-  INSTRUCTIONS: 2
+  INSTRUCTIONS: 2,
+  LOSTLIFE: 3
 };
+
 let gameState = GAME_STATE.STARTSCREEN;
-let current_level = 7;
+let current_level = 1;
 let shipNum = 1;
-let isDoubleShooter = true;
+let playerLives = 3;
+let isDoubleShooter = false;
 let isChallenging = false;
 
 let isGameOver = false;
@@ -150,15 +157,7 @@ let startGame = (event) => {
     gameState = GAME_STATE.STARTSCREEN;
   } else if (gameState === GAME_STATE.RUNNING && isGameOver) {
     if (event.code === "Escape") {
-      inDaClub.pause();
-      rage.pause();
-      oldTownRoad.pause();
-      dropTop.pause();
-      zeze.pause();
-      loveScars.pause();
-      rosalia.pause();
-      spaceCadet.pause();
-      dior.pause();
+      pauseAllSongs();
       gameState = GAME_STATE.STARTSCREEN;
     } else if (event.code === "Space") {
       if (!didWin) {
@@ -187,7 +186,7 @@ let startGame = (event) => {
       event.code === "Digit6" ||
       event.code === "Digit7" ||
       event.code === "Digit9" ||
-      event.code === "KeyH")
+      event.code === "KeyC")
   ) {
     if (event.code === "Digit1") {
       shipNum = 1;
@@ -210,7 +209,7 @@ let startGame = (event) => {
     } else if (event.code === "Digit9") {
       shipNum = 9;
       newPlayer(shipNum);
-    } else if (event.code === "KeyH") {
+    } else if (event.code === "KeyC") {
       isChallenging = true;
       shipNum = 10;
       newPlayer(shipNum);
@@ -227,12 +226,11 @@ let startGame = (event) => {
       rage.currentTime = 0;
       rage.play();
     } else {
-      inDaClub.pause();
-      // gasolina.currentTime = 0;
-      // gasolina.play();
-      rosalia.currentTime = 0;
-      rosalia.play();
+      setLevel();
     }
+  } else if (gameState === GAME_STATE.LOSTLIFE && event.code === "KeyR") {
+    gameState = GAME_STATE.RUNNING;
+    setLevel();
   }
 };
 
@@ -284,6 +282,8 @@ function game() {
   } else if (gameState === GAME_STATE.INSTRUCTIONS) {
     // showInstructions(ctx);
     showInstructionsF(ctx, canvas, background, hyperionTitle, ship1, enemy2);
+  } else if (gameState === GAME_STATE.LOSTLIFE) {
+    displayLostLife();
   } else if (gameState === GAME_STATE.RUNNING) {
     checkGameOver();
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
@@ -387,12 +387,68 @@ function resetAllVariables() {
   );
   player = new Player(canvas, 18, playerBulletController, shipNum);
 
+  pauseAllSongs();
+}
+
+function pauseAllSongs() {
+  gasolina.pause();
+  vocalFunction.pause();
+  inDaClub.pause();
   dropTop.pause();
   zeze.pause();
   loveScars.pause();
   rosalia.pause();
+  aLot.pause();
   spaceCadet.pause();
   dior.pause();
+  rage.pause();
+  oldTownRoad.pause();
+}
+
+function setLevel() {
+  if (current_level === 1) {
+    pauseAllSongs();
+    gasolina.currentTime = 0;
+    gasolina.play();
+  }
+  if (current_level === 2) {
+    gasolina.pause();
+    vocalFunction.currentTime = 0;
+    vocalFunction.play();
+  } else if (current_level === 3) {
+    vocalFunction.pause();
+    inDaClub.currentTime = 0;
+    inDaClub.play();
+  } else if (current_level === 4) {
+    inDaClub.pause();
+    dropTop.currentTime = 0;
+    dropTop.play();
+  } else if (current_level === 5) {
+    dropTop.pause();
+    zeze.currentTime = 0;
+    zeze.play();
+  } else if (current_level === 6) {
+    zeze.pause();
+    loveScars.currentTime = 0;
+    loveScars.play();
+  } else if (current_level === 7) {
+    loveScars.pause();
+    rosalia.currentTime = 0;
+    rosalia.play();
+  } else if (current_level === 8) {
+    rosalia.pause();
+    aLot.currentTime = 0;
+    aLot.play();
+  } else if (current_level === 9) {
+    aLot.pause();
+    spaceCadet.currentTime = 0;
+    spaceCadet.play();
+  } else if (current_level === 10) {
+    spaceCadet.pause();
+    dior.currentTime = 0;
+    dior.play();
+  }
+  levelUp();
 }
 
 function levelUp() {
@@ -426,7 +482,7 @@ function levelUp() {
   );
   player = new Player(canvas, 18, playerBulletController, shipNum);
 
-  levelUpSound.play();
+  if (current_level > 1) levelUpSound.play();
 }
 
 function drawLevelUp() {
@@ -460,17 +516,18 @@ function checkGameOver() {
   if (isGameOver) {
     return;
   }
+
   if (
     enemyBulletController.collideWith(player) ||
     enemyController.collideWith(player)
   ) {
-    isGameOver = true;
-    oldTownRoad.pause();
-    gasolina.pause();
-    vocalFunction.pause();
-    inDaClub.pause();
-    rage.pause();
-    dropTop.pause();
+    if (isChallenging && playerLives > 1) {
+      playerLives--;
+      gameState = GAME_STATE.LOSTLIFE;
+      pauseAllSongs();
+    } else {
+      isGameOver = true;
+    }
     playerDeathSound.play();
   }
   if (enemyController.enemyRows.length > 0) {
@@ -506,49 +563,9 @@ function checkGameOver() {
       playerWinSound.play();
     }
     // #region challenging levels
-    else if (current_level === 3 && isChallenging) {
-      current_level = 4;
-      inDaClub.pause();
-      dropTop.currentTime = 0;
-      dropTop.play();
-      levelUp();
-    } else if (current_level === 4 && isChallenging) {
-      current_level = 5;
-      dropTop.pause();
-      zeze.currentTime = 0;
-      zeze.play();
-      levelUp();
-    } else if (current_level === 5 && isChallenging) {
-      current_level = 6;
-      zeze.pause();
-      loveScars.currentTime = 0;
-      loveScars.play();
-      levelUp();
-    } else if (current_level === 6 && isChallenging) {
-      current_level = 7;
-      loveScars.pause();
-      rosalia.currentTime = 0;
-      rosalia.play();
-      levelUp();
-    } else if (current_level === 7 && isChallenging) {
-      current_level = 8;
-      gasolina.pause();
-      rosalia.pause();
-      aLot.currentTime = 0;
-      aLot.play();
-      levelUp();
-    } else if (current_level === 8 && isChallenging) {
-      current_level = 9;
-      aLot.pause();
-      spaceCadet.currentTime = 0;
-      spaceCadet.play();
-      levelUp();
-    } else if (current_level === 9 && isChallenging) {
-      current_level = 10;
-      spaceCadet.pause();
-      dior.currentTime = 0;
-      dior.play();
-      levelUp();
+    else if (current_level >= 3 && current_level < 10 && isChallenging) {
+      current_level++;
+      setLevel();
     } else if (current_level === 10 && isChallenging) {
       didWin = true;
       isGameOver = true;
@@ -563,26 +580,26 @@ function displayGameOver() {
     // you won!
     if (didWin) {
       const textOriginX = 50;
-      const textOriginY = 100;
+      const textOriginY = 125;
       let text = "You Won!";
       ctx.fillStyle = "white";
-      ctx.font = "45px Courier New";
-      ctx.fillText(text, textOriginX, textOriginY);
+      ctx.font = "55px Courier New";
+      ctx.fillText(text, textOriginX + 120, textOriginY);
 
-      ctx.drawImage(hyperionMoon, textOriginX + 20, textOriginY + 90, 325, 275);
+      ctx.drawImage(hyperionMoon, textOriginX + 40, textOriginY + 55, 300, 255);
       const currShip = new Image();
       currShip.src = `/src/images/pixel_ship_${shipNum}.png`;
-      ctx.drawImage(currShip, textOriginX + 390, textOriginY + 325, 53, 53);
+      ctx.drawImage(currShip, textOriginX + 390, textOriginY + 275, 53, 53);
       const enemyDeath = new Image();
       enemyDeath.src = "/src/images/pixel_enemy_death.png";
-      ctx.drawImage(enemyDeath, textOriginX + 390, textOriginY + 105, 53, 53);
+      ctx.drawImage(enemyDeath, textOriginX + 390, textOriginY + 55, 53, 53);
 
       let text2 = "Hit ESC to go back to Start Screen";
-      ctx.font = "bold 24px Courier New";
-      ctx.fillText(text2, textOriginX + 5, textOriginY + 450);
+      ctx.font = "24px Courier New";
+      ctx.fillText(text2, textOriginX + 5, textOriginY + 400);
 
       ctx.fillStyle = "#9df716";
-      ctx.fillRect(textOriginX + 412, textOriginY + 200, 3.75, 15);
+      ctx.fillRect(textOriginX + 412, textOriginY + 150, 3.75, 15);
 
       // const mittens = new Image();
       // mittens.src = "/src/images/pixel_ship_6.png";
@@ -625,6 +642,37 @@ function displayGameOver() {
       let text3 = "or hit ESC to choose new ship.";
       ctx.fillText(text3, textOriginX + 60, textOriginY + 485);
     }
+  }
+}
+
+function displayLostLife() {
+  const textOriginX = 80;
+  const textOriginY = 250;
+
+  ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+  ctx.drawImage(hyperionTitle, 150, 30, 300, 120);
+
+  let text = "You Lost A Life!";
+  ctx.fillStyle = "white";
+  ctx.font = "45px Courier New";
+  ctx.fillText(text, textOriginX, textOriginY);
+
+  let text2 = "Press R to continue";
+  ctx.font = "bold 25px Courier New";
+  ctx.fillText(text2, textOriginX + 60, textOriginY + 90);
+
+  let text3 = `You have ${playerLives} more live(s):`;
+  ctx.font = "25px Courier New";
+  ctx.fillText(text3, textOriginX + 50, textOriginY + 185);
+
+  const currShip = new Image();
+  currShip.src = `/src/images/pixel_ship_${shipNum}.png`;
+
+  if (playerLives === 2) {
+    ctx.drawImage(currShip, textOriginX + 80, textOriginY + 240, 70, 70);
+    ctx.drawImage(currShip, textOriginX + 270, textOriginY + 240, 70, 70);
+  } else if (playerLives === 1) {
+    ctx.drawImage(currShip, textOriginX + 180, textOriginY + 240, 70, 70);
   }
 }
 

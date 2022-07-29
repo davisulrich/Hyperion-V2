@@ -4,6 +4,7 @@ export default class BulletController {
   bullets = [];
   timeTillNextBullet = 0;
   timeTillShooterUpgrade = 380;
+  hasFired = false;
 
   constructor(
     canvas,
@@ -21,7 +22,6 @@ export default class BulletController {
     this.shipNum = shipNum;
     this.isDoubleShooter = isDoubleShooter;
     this.isChallenging = isChallenging;
-    this.hasFired = false;
 
     this.doubleShooterAudio = new Audio("/src/audio/small-win.wav");
     this.doubleShooterAudio.volume = 0.6;

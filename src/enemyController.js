@@ -53,7 +53,7 @@ export default class EnemyController {
     } else if (this.level >= 8 && this.level < 10) {
       this.fireBulletTimerDefault = 10;
     } else if (this.level === 10) {
-      this.fireBulletTimerDefault = 5;
+      this.fireBulletTimerDefault = 1;
     }
   }
 
