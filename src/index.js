@@ -1,12 +1,11 @@
 // Youtube: https://www.youtube.com/watch?v=qCBiKJbLcFI
 
 // To do:
-// - level 8 looks like a 3
+// - start loading next level enemy images on current level
+// - level 8 looks like a 3 - edit image
 // - leaderboard LEADERBOARD -Liam
 // - make it more about dodging bullts less about the speed of enemies?
-// - 3 lives for challenging level - pick up at beginning of level u left off on
 // - multiple ships for challenging level
-// - if restart, pause all songs
 // - when you choose challenge level then go back to home screen, erase the isChallenging = true
 // - make the levels more gradual - alternate shoot rate and velocity
 // - indicate that enemy hasn't died even tho you shot it
@@ -15,6 +14,7 @@
 // - instructions: if you think you're hot sh%#, press h for a challenge version
 
 // Done:
+// - 3 lives for challenging level - pick up at beginning of level u left off on
 // - make a noise for getting double shooter
 // - need a way to pass double shooter variable to new levels
 // - create level 4 - 10 signs for beginning of level
@@ -113,6 +113,16 @@ const aLot = new Audio("src/audio/ALot.mp3");
 aLot.volume = 0.45;
 const dior = new Audio("src/audio/Dior.mp3");
 dior.volume = 0.45;
+const dancingQueen = new Audio("src/audio/DancingQueen.mp3");
+dancingQueen.volume = 0.45;
+const starsOn45 = new Audio("src/audio/StarsOn45.m4a");
+starsOn45.volume = 0.45;
+const boyfriend = new Audio("src/audio/Boyfriend.mp3");
+boyfriend.volume = 0.65;
+const intoTheGroove = new Audio("src/audio/IntoTheGroove.mp3");
+intoTheGroove.volume = 0.45;
+const sexyBack = new Audio("src/audio/SexyBack.mp3");
+sexyBack.volume = 0.45;
 
 // timer for how long until to show the next rage photo
 let rageNum = 1;
@@ -158,6 +168,7 @@ let startGame = (event) => {
   } else if (gameState === GAME_STATE.RUNNING && isGameOver) {
     if (event.code === "Escape") {
       pauseAllSongs();
+      resetAllVariables();
       gameState = GAME_STATE.STARTSCREEN;
     } else if (event.code === "Space") {
       if (!didWin) {
@@ -190,24 +201,31 @@ let startGame = (event) => {
   ) {
     if (event.code === "Digit1") {
       shipNum = 1;
+      isChallenging = false;
       newPlayer(shipNum);
     } else if (event.code === "Digit2") {
       shipNum = 2;
+      isChallenging = false;
       newPlayer(shipNum);
     } else if (event.code === "Digit3") {
       shipNum = 3;
+      isChallenging = false;
       newPlayer(shipNum);
     } else if (event.code === "Digit5") {
       shipNum = 5;
+      isChallenging = false;
       newPlayer(shipNum);
     } else if (event.code === "Digit6") {
       shipNum = 6;
+      isChallenging = false;
       newPlayer(shipNum);
     } else if (event.code === "Digit7") {
       shipNum = 7;
+      isChallenging = false;
       newPlayer(shipNum);
     } else if (event.code === "Digit9") {
       shipNum = 9;
+      isChallenging = false;
       newPlayer(shipNum);
     } else if (event.code === "KeyC") {
       isChallenging = true;
@@ -228,9 +246,14 @@ let startGame = (event) => {
     } else {
       setLevel();
     }
-  } else if (gameState === GAME_STATE.LOSTLIFE && event.code === "KeyR") {
-    gameState = GAME_STATE.RUNNING;
-    setLevel();
+  } else if (gameState === GAME_STATE.LOSTLIFE) {
+    if (event.code === "KeyR") {
+      gameState = GAME_STATE.RUNNING;
+      setLevel();
+    } else if (event.code === "Escape") {
+      pauseAllSongs();
+      gameState = GAME_STATE.STARTSCREEN;
+    }
   }
 };
 
@@ -358,6 +381,7 @@ function resetAllVariables() {
   nextRagePhotoTimer = 100;
   showRagePhoto = false;
   ragePhotoTimer = 40;
+  playerLives = 3;
 
   playerBulletController = new BulletController(
     canvas,
@@ -421,30 +445,36 @@ function setLevel() {
     inDaClub.play();
   } else if (current_level === 4) {
     inDaClub.pause();
-    dropTop.currentTime = 0;
-    dropTop.play();
+    // dropTop.currentTime = 0;
+    // dropTop.play();
+    dancingQueen.currentTime = 0;
+    dancingQueen.play();
   } else if (current_level === 5) {
-    dropTop.pause();
+    dancingQueen.pause();
+    starsOn45.currentTime = 0;
+    starsOn45.play();
+  } else if (current_level === 6) {
+    starsOn45.pause();
+    // loveScars
+    boyfriend.currentTime = 0;
+    boyfriend.play();
+  } else if (current_level === 7) {
+    boyfriend.pause();
+    // rosalia
+    intoTheGroove.currentTime = 0;
+    intoTheGroove.play();
+  } else if (current_level === 8) {
+    intoTheGroove.pause();
+    // a lot
+    sexyBack.currentTime = 0;
+    sexyBack.play();
+  } else if (current_level === 9) {
+    sexyBack.pause();
+    // space cadet
     zeze.currentTime = 0;
     zeze.play();
-  } else if (current_level === 6) {
-    zeze.pause();
-    loveScars.currentTime = 0;
-    loveScars.play();
-  } else if (current_level === 7) {
-    loveScars.pause();
-    rosalia.currentTime = 0;
-    rosalia.play();
-  } else if (current_level === 8) {
-    rosalia.pause();
-    aLot.currentTime = 0;
-    aLot.play();
-  } else if (current_level === 9) {
-    aLot.pause();
-    spaceCadet.currentTime = 0;
-    spaceCadet.play();
   } else if (current_level === 10) {
-    spaceCadet.pause();
+    zeze.pause();
     dior.currentTime = 0;
     dior.play();
   }
@@ -526,6 +556,7 @@ function checkGameOver() {
       gameState = GAME_STATE.LOSTLIFE;
       pauseAllSongs();
     } else {
+      if (!isChallenging) pauseAllSongs();
       isGameOver = true;
     }
     playerDeathSound.play();
@@ -586,20 +617,26 @@ function displayGameOver() {
       ctx.font = "55px Courier New";
       ctx.fillText(text, textOriginX + 120, textOriginY);
 
-      ctx.drawImage(hyperionMoon, textOriginX + 40, textOriginY + 55, 300, 255);
+      ctx.drawImage(
+        hyperionMoon,
+        textOriginX + 40,
+        textOriginY + 110,
+        200,
+        172
+      );
       const currShip = new Image();
       currShip.src = `/src/images/pixel_ship_${shipNum}.png`;
-      ctx.drawImage(currShip, textOriginX + 390, textOriginY + 275, 53, 53);
+      ctx.drawImage(currShip, textOriginX + 350, textOriginY + 260, 53, 53);
       const enemyDeath = new Image();
       enemyDeath.src = "/src/images/pixel_enemy_death.png";
-      ctx.drawImage(enemyDeath, textOriginX + 390, textOriginY + 55, 53, 53);
+      ctx.drawImage(enemyDeath, textOriginX + 350, textOriginY + 85, 53, 53);
 
       let text2 = "Hit ESC to go back to Start Screen";
       ctx.font = "24px Courier New";
       ctx.fillText(text2, textOriginX + 5, textOriginY + 400);
 
       ctx.fillStyle = "#9df716";
-      ctx.fillRect(textOriginX + 412, textOriginY + 150, 3.75, 15);
+      ctx.fillRect(textOriginX + 372, textOriginY + 170, 3.75, 15);
 
       // const mittens = new Image();
       // mittens.src = "/src/images/pixel_ship_6.png";
