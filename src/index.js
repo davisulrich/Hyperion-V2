@@ -1,12 +1,12 @@
 // Youtube: https://www.youtube.com/watch?v=qCBiKJbLcFI
 
 // To do:
+// - flashing level signs for level 7 and 9
+// - multiple ships for challenging level
+// - add more levels
 // - start loading next level enemy images on current level
-// - level 8 looks like a 3 - edit image
 // - leaderboard LEADERBOARD -Liam
 // - make it more about dodging bullts less about the speed of enemies?
-// - multiple ships for challenging level
-// - when you choose challenge level then go back to home screen, erase the isChallenging = true
 // - make the levels more gradual - alternate shoot rate and velocity
 // - indicate that enemy hasn't died even tho you shot it
 // - add a ship for number 4 and 8
@@ -41,11 +41,11 @@ const GAME_STATE = {
 };
 
 let gameState = GAME_STATE.STARTSCREEN;
-let current_level = 1;
+let current_level = 4;
 let shipNum = 1;
 let playerLives = 3;
-let isDoubleShooter = false;
-let isChallenging = false;
+let isDoubleShooter = true;
+let isChallenging = true;
 
 let isGameOver = false;
 let didWin = false;
@@ -123,6 +123,12 @@ const intoTheGroove = new Audio("src/audio/IntoTheGroove.mp3");
 intoTheGroove.volume = 0.45;
 const sexyBack = new Audio("src/audio/SexyBack.mp3");
 sexyBack.volume = 0.45;
+const immaBe = new Audio("src/audio/ImmaBe.mp3");
+immaBe.volume = 0.55;
+const hypnotize = new Audio("src/audio/Hypnotize.mp3");
+hypnotize.volume = 0.45;
+const returnOfTheMack = new Audio("src/audio/ReturnoftheMack.mp3");
+returnOfTheMack.volume = 0.75;
 
 // timer for how long until to show the next rage photo
 let rageNum = 1;
@@ -427,6 +433,13 @@ function pauseAllSongs() {
   dior.pause();
   rage.pause();
   oldTownRoad.pause();
+  sexyBack.pause();
+  dancingQueen.pause();
+  starsOn45.pause();
+  boyfriend.pause();
+  immaBe.pause();
+  hypnotize.pause();
+  returnOfTheMack.pause();
 }
 
 function setLevel() {
@@ -461,22 +474,22 @@ function setLevel() {
   } else if (current_level === 7) {
     boyfriend.pause();
     // rosalia
-    intoTheGroove.currentTime = 0;
-    intoTheGroove.play();
+    immaBe.currentTime = 0;
+    immaBe.play();
   } else if (current_level === 8) {
-    intoTheGroove.pause();
+    immaBe.pause();
     // a lot
     sexyBack.currentTime = 0;
     sexyBack.play();
   } else if (current_level === 9) {
     sexyBack.pause();
     // space cadet
-    zeze.currentTime = 0;
-    zeze.play();
+    hypnotize.currentTime = 0;
+    hypnotize.play();
   } else if (current_level === 10) {
-    zeze.pause();
-    dior.currentTime = 0;
-    dior.play();
+    hypnotize.pause();
+    returnOfTheMack.currentTime = 0;
+    returnOfTheMack.play();
   }
   levelUp();
 }
