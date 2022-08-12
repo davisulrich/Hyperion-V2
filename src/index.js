@@ -1,7 +1,6 @@
 // Youtube: https://www.youtube.com/watch?v=qCBiKJbLcFI
 
 // To do:
-// - flashing level signs for level 7 and 9
 // - multiple ships for challenging level
 // - add more levels
 // - start loading next level enemy images on current level
@@ -11,9 +10,12 @@
 // - indicate that enemy hasn't died even tho you shot it
 // - add a ship for number 4 and 8
 // - add to instructions - press a random number to use a mystery ship
-// - instructions: if you think you're hot sh%#, press h for a challenge version
+// - instructions: PRESS C for a challenge version
+// - make your own profile, shop for ships, upload a photo to be your ship, and store off your most recent tries
+// - make it an iPhone app
 
 // Done:
+// - flashing level signs for level 7 and 9
 // - 3 lives for challenging level - pick up at beginning of level u left off on
 // - make a noise for getting double shooter
 // - need a way to pass double shooter variable to new levels
@@ -41,7 +43,7 @@ const GAME_STATE = {
 };
 
 let gameState = GAME_STATE.STARTSCREEN;
-let current_level = 4;
+let current_level = 7;
 let shipNum = 1;
 let playerLives = 3;
 let isDoubleShooter = true;
@@ -139,6 +141,9 @@ let rage_photo = new Image();
 rage_photo.src = `/src/images/rage_${rageNum}.png`;
 
 let levelUpTextTimer = 40;
+let showLevel = true;
+let levelFlashTimer = 15;
+
 const level1Image = new Image();
 level1Image.src = "/src/images/level_1.png";
 const level2Image = new Image();
@@ -388,6 +393,8 @@ function resetAllVariables() {
   showRagePhoto = false;
   ragePhotoTimer = 40;
   playerLives = 3;
+  levelFlashTimer = 15;
+  showLevel = true;
 
   playerBulletController = new BulletController(
     canvas,
@@ -497,6 +504,8 @@ function setLevel() {
 function levelUp() {
   levelUpTextTimer = 40;
   isDoubleShooter = playerBulletController.isDoubleShooter;
+  levelFlashTimer = 15;
+  showLevel = true;
 
   playerBulletController = new BulletController(
     canvas,
@@ -543,15 +552,30 @@ function drawLevelUp() {
     } else if (current_level === 6) {
       ctx.drawImage(level6Image, 210, 300, 186, 48);
     } else if (current_level === 7) {
-      ctx.drawImage(level7Image, 210, 300, 186, 48);
+      levelOnAndOff();
+      if (showLevel) {
+        ctx.drawImage(level7Image, 210, 300, 186, 48);
+      }
     } else if (current_level === 8) {
       ctx.drawImage(level8Image, 210, 300, 186, 48);
     } else if (current_level === 9) {
-      ctx.drawImage(level9Image, 210, 300, 186, 48);
+      levelOnAndOff();
+      if (showLevel) {
+        ctx.drawImage(level9Image, 210, 300, 186, 48);
+      }
     } else if (current_level === 10) {
       ctx.drawImage(level10Image, 210, 300, 186, 48);
     }
     levelUpTextTimer--;
+  }
+}
+
+function levelOnAndOff() {
+  if (levelFlashTimer > 0) {
+    levelFlashTimer--;
+  } else if (levelFlashTimer === 0) {
+    showLevel = !showLevel;
+    levelFlashTimer = 1;
   }
 }
 
