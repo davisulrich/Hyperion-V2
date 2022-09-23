@@ -5,6 +5,7 @@
 // - add more levels
 // - start loading next level enemy images on current level
 // - leaderboard LEADERBOARD -Liam
+// - invisible enemies
 // - make it more about dodging bullts less about the speed of enemies?
 // - make the levels more gradual - alternate shoot rate and velocity
 // - indicate that enemy hasn't died even tho you shot it
@@ -43,11 +44,11 @@ const GAME_STATE = {
 };
 
 let gameState = GAME_STATE.STARTSCREEN;
-let current_level = 7;
+let current_level = 1;
 let shipNum = 1;
 let playerLives = 3;
-let isDoubleShooter = true;
-let isChallenging = true;
+let isDoubleShooter = false;
+let isChallenging = false;
 
 let isGameOver = false;
 let didWin = false;
