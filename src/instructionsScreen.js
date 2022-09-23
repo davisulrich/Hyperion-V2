@@ -12,19 +12,19 @@ function showInstructionsF(
   const textOriginX = 50;
   const textOriginY = 210;
   ctx.fillStyle = "#adadad";
-  ctx.font = "bold 36px Courier New";
+  ctx.font = "bold 30px Courier New";
   const text1 = "INSTRUCTIONS:";
-  ctx.fillText(text1, textOriginX + 110, textOriginY);
+  ctx.fillText(text1, textOriginX + 10, textOriginY);
 
-  ctx.font = "24px Courier New";
-  const text2 = "You must shoot the aliens who";
+  ctx.font = "20px Courier New";
+  const text2 = "You must shoot the aliens to save";
   ctx.fillText(text2, textOriginX, textOriginY + 60);
-  const text3 = "are attempting to destroy";
-  ctx.fillText(text3, textOriginX, textOriginY + 105);
-  const text4 = "Saturn's Moon, Hyperion.";
-  ctx.fillText(text4, textOriginX, textOriginY + 150);
-  const text5 = "You have one life.";
-  ctx.fillText(text5, textOriginX, textOriginY + 205);
+  const text3 = "Saturn's Moon, Hyperion.";
+  ctx.fillText(text3, textOriginX, textOriginY + 100);
+  const text4 = "Press 'C' for challenge version.";
+  ctx.fillText(text4, textOriginX, textOriginY + 140);
+  const text5 = "Fight or perish.";
+  ctx.fillText(text5, textOriginX, textOriginY + 200);
 
   ctx.font = "bold 24px Courier New";
   const text5a = "Press ESC to go back.";

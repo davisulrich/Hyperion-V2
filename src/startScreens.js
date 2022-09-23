@@ -19,13 +19,13 @@ function showStartScreenF(
 
   ctx.fillStyle = "white";
 
-  ctx.font = "22px Courier New";
+  ctx.font = "18px Courier New";
   const text1 = "For instructions, hit 'I' key.";
-  ctx.fillText(text1, textOriginX, textOriginY);
+  ctx.fillText(text1, textOriginX + 40, textOriginY + 17);
 
-  ctx.font = "bold 22px Courier New";
-  const text4 = "Press 1-3 to start.";
-  ctx.fillText(text4, textOriginX + 75, textOriginY + 50);
+  // ctx.font = "bold 22px Courier New";
+  // const text4 = "Press 1-3 to start.";
+  // ctx.fillText(text4, textOriginX + 75, textOriginY + 50);
 
   ctx.font = "20px Courier New";
   const text5 = "Press 1:";
